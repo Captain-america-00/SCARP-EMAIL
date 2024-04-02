@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Email Sender</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/1L_dstPt3HV5HzF6Gvk/e3s4Wz6iJgD/+ub2oU" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4 text-center">Bulk Email Sender</h1>
+        <form id="emailForm">
+            <div class="mb-3">
+                <label for="csvFile" class="form-label">Select a CSV file:</label>
+                <input type="file" class="form-control" id="csvFile" required>
+            </div>
+            <div class="mb-3">
+                <label for="emailMessage" class="form-label">Enter the email message:</label>
+                <textarea class="form-control" id="emailMessage" rows="5" required></textarea>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Send Emails</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#emailForm").submit(function(e) {
+                e.preventDefault();
+
+                const csvFile = $("#csvFile").prop("files")[0];
+                const emailMessage = $("#emailMessage").val();
+
+                if (!csvFile || !emailMessage) {
+                    alert("Please select a CSV file and enter the email message.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("csvFile", csvFile);
+                formData.append("emailMessage", emailMessage);
+
+                $.ajax({
+                    type: "POST",
+                    url: "send_emails.php",
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.success) {
+                            alert("Emails sent successfully.");
+                            $("#emailForm")[0].reset();
+                        } else {
+                            alert("Error sending emails: " + response.message);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("Error sending emails: " + textStatus + ": " + errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
