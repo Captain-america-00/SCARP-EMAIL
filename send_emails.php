@@ -1,7 +1,7 @@
 // Replace with your Google API credentials
 $clientId = '774534186405-80lv1beh29860ptmbkssn2i03jvvgn66.apps.googleusercontent.com';
 $clientSecret = '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';
-$redirectUri = 'http://localhost/bulk-email-sender/';
+$redirectUri = 'https://scarp-email.vercel.app/';
 
 // Create client object
 $client = new Google_Client();
